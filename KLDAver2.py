@@ -3,10 +3,12 @@ from collections import defaultdict
 import ksig
 
 class KLDA:
-    def __init__(self, num_classes, d, D, sigma, seed, device):
+    def __init__(self, num_classes, d, D_rff,n_levels, sigma, seed, device):
         self.num_classes = num_classes
         self.d = d
-        self.D = D
+        self.D_rff = D_rff
+        self.n_levels = n_levels
+        self.D = n_levels * D_rff + 1
         self.sigma = sigma
         self.seed = seed
         self.device = device
@@ -17,12 +19,10 @@ class KLDA:
         self.sigma = torch.zeros((self.D, self.D), device=self.device)
         self.sigma_inv = None
         self.class_mean_matrix = None
-
-        self.n_levels = 3  
         self.rfsf_kernel = ksig.kernels.SignatureFeatures(
             n_levels=self.n_levels,
-            static_features=ksig.static.features.RandomFourierFeatures(n_components=D//2),
-            projection=ksig.projections.TensorizedRandomProjection(n_components=D)
+            static_features=ksig.static.features.RandomFourierFeatures(n_components=D_rff),
+            projection=ksig.projections.TensorizedRandomProjection(n_components=D_rff)
         )
 
     def _compute_rfsf(self, X):
