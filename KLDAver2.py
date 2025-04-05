@@ -1,5 +1,6 @@
 import torch
 from collections import defaultdict
+import ksig
 
 class KLDA:
     def __init__(self, num_classes, d, D, sigma, seed, device):
