@@ -55,7 +55,7 @@ def main(args):
     test_filename = DATASET_PATHS[dataset_name]['test']
     train_df, test_df = load_data_from_csv(train_filename, test_filename)
 
-    model = Classifier(D=args.D, sigma=args.sigma, num_ensembles=args.num_ensembles, seed=args.seed, model_name=args.model_name)
+    model = Classifier(D=args.D,level=args.level, sigma=args.sigma, num_ensembles=args.num_ensembles, seed=args.seed, model_name=args.model_name)
     model.fit(train_df)
 
     accuracy = compute_accuracy(model, test_df)
@@ -65,6 +65,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('dataset_name', type=str, help="Name of the dataset to use (CLINC, Banking, DBpedia, HWU).")
     parser.add_argument('--D', type=int, default=5000, help="Dimension of the transformed features using RFF.")
+    parser.add_argument('--level',type=int,default=5)
     parser.add_argument('--sigma', type=float, default=1e-4, help="Bandwidth parameter for the RBF kernel.")
     parser.add_argument('--num_ensembles', type=int, default=5, help="Number of ensemble models to use.")
     parser.add_argument('--seed', type=int, default=0, help="Random seed for reproducibility.")
