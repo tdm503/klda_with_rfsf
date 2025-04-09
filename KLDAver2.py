@@ -21,9 +21,9 @@ class KLDA:
         self.class_mean_matrix = None
 
     def _compute_rfsf(self, X):
-        static_feet = ksig.static.features.RandomFourierFeatures(n_components=self.D)
-        proj = ksig.projections.TensorizerRandomProjection(n_components=self.D)
-        rfsf_trp_kernel = ksig.kernels.SignatureFetures(n_levels=self.level,static_feet=static_feet,projection=proj)
+        static_features = ksig.static.features.RandomFourierFeatures(n_components=self.D)
+        proj = ksig.projections.TensorizedRandomProjection(n_components=self.D)
+        rfsf_trp_kernel = ksig.kernels.SignatureFetures(n_levels=self.level,static_features=static_features,projection=proj)
         rfsf_trp_kernel.fit(X)
         P_X = rfsf_trp_kernel.transform(P_X)
         return P_X
