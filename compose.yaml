@@ -1,0 +1,38 @@
+services:
+  cpu:
+    build:
+      context: .
+      args:
+        TORCH_INDEX_URL: https://download.pytorch.org/whl/cpu
+    image: klda-orff:cpu
+    working_dir: /app
+    environment:
+      HF_HOME: /cache/huggingface
+      TOKENIZERS_PARALLELISM: "false"
+    volumes:
+      - ./results:/app/results
+      - hf-cache:/cache/huggingface
+    command: ["CLINC", "--mapping", "orf", "--D", "256", "--num_ensembles", "1", "--seed", "0"]
+
+  gpu:
+    profiles: ["gpu"]
+    build:
+      context: .
+      args:
+        TORCH_INDEX_URL: https://download.pytorch.org/whl/cu121
+    image: klda-orff:cu121
+    working_dir: /app
+    environment:
+      HF_HOME: /cache/huggingface
+      TOKENIZERS_PARALLELISM: "false"
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    volumes:
+      - ./results:/app/results
+      - hf-cache:/cache/huggingface
+    gpus: all
+    shm_size: "2gb"
+    command: ["CLINC", "--mapping", "orf", "--D", "512", "--num_ensembles", "5", "--seed", "0"]
+
+volumes:
+  hf-cache:
